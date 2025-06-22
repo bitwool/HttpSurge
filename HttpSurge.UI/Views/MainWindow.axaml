@@ -4,11 +4,29 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:HttpSurge.UI.Views"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="768"
         x:Class="HttpSurge.UI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="HttpSurge.UI">
+
+    <Window.DataTemplates>
+        <DataTemplate DataType="{x:Type vm:RequestTreeViewModel}">
+            <views:RequestTreeView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ApiTabViewModel}">
+            <views:ApiTabView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:VariableManagementViewModel}">
+            <views:VariableManagementView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PerformanceTestViewModel}">
+            <views:PerformanceTestView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PerformanceTestDetailViewModel}">
+            <views:PerformanceTestDetailView />
+        </DataTemplate>
+    </Window.DataTemplates>
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -16,9 +34,25 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid ColumnDefinitions="300, *">
-        <views:RequestTreeView DataContext="{Binding RequestTreeVm}" />
-        <views:ApiTabView Grid.Column="1" DataContext="{Binding ApiTabVm}" />
+    <Grid ColumnDefinitions="Auto, 300, *">
+        <Border Grid.Column="0" Background="#F0F0F0" Padding="5">
+            <StackPanel Spacing="10">
+                <Button Command="{Binding ShowApiManagementCommand}" ToolTip.Tip="接口管理">
+                    <TextBlock>API</TextBlock>
+                </Button>
+                <Button Command="{Binding ShowVariableManagementCommand}" ToolTip.Tip="变量管理">
+                    <TextBlock>VAR</TextBlock>
+                </Button>
+                <Button Command="{Binding ShowPerformanceTestCommand}" ToolTip.Tip="性能测试">
+                    <TextBlock>PERF</TextBlock>
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <ContentControl Grid.Column="1" Content="{Binding Column2Content}" />
+        <GridSplitter Grid.Column="1" Width="2" Background="LightGray" HorizontalAlignment="Right" />
+        
+        <ContentControl Grid.Column="2" Content="{Binding Column3Content}" />
     </Grid>
 
 </Window>
