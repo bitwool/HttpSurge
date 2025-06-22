@@ -1,0 +1,90 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HttpSurge.UI.ViewModels"
+             xmlns:models="using:HttpSurge.UI.Models"
+             xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="HttpSurge.UI.Views.RequestTreeView"
+             x:DataType="vm:RequestTreeViewModel">
+    <TreeView x:Name="ItemsTreeView" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+        <TreeView.ContextMenu>
+            <ContextMenu>
+                <MenuItem Command="{Binding AddCollectionCommand}" Header="Add Collection" />
+            </ContextMenu>
+        </TreeView.ContextMenu>
+        <TreeView.DataTemplates>
+            <TreeDataTemplate DataType="{x:Type models:Collection}" ItemsSource="{Binding Children}">
+                <StackPanel Background="Transparent" Orientation="Horizontal" Spacing="4">
+                    <StackPanel.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding #ItemsTreeView.DataContext.RenameCommand}"
+                                      CommandParameter="{Binding}" Header="Rename" />
+                            <MenuItem Command="{Binding #ItemsTreeView.DataContext.AddSubfolderCommand}"
+                                      CommandParameter="{Binding}" Header="Add Subfolder" />
+                            <MenuItem Command="{Binding #ItemsTreeView.DataContext.AddApiCommand}"
+                                      CommandParameter="{Binding}" Header="Add API" />
+                            <Separator />
+                            <MenuItem Command="{Binding #ItemsTreeView.DataContext.SaveChangesCommand}"
+                                      CommandParameter="{Binding}" Header="Save Changes" />
+                            <MenuItem Command="{Binding #ItemsTreeView.DataContext.DeleteItemCommand}"
+                                      CommandParameter="{Binding}" Header="Delete Collection" />
+                        </ContextMenu>
+                    </StackPanel.ContextMenu>
+                    <icons:MaterialIcon Kind="Folder" />
+                    <Grid>
+                        <TextBlock IsVisible="{Binding !IsRenaming}" Text="{Binding Name}" />
+                        <TextBox KeyDown="RenameTextBox_OnKeyDown" LostFocus="RenameTextBox_OnLostFocus"
+                                 IsVisible="{Binding IsRenaming}" Text="{Binding Name, Mode=TwoWay}" />
+                    </Grid>
+                </StackPanel>
+            </TreeDataTemplate>
+            <TreeDataTemplate DataType="{x:Type models:Folder}" ItemsSource="{Binding Children}">
+                <StackPanel Background="Transparent" Orientation="Horizontal" Spacing="4">
+                    <StackPanel.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding #ItemsTreeView.DataContext.RenameCommand}"
+                                      CommandParameter="{Binding}" Header="Rename" />
+                            <MenuItem Command="{Binding #ItemsTreeView.DataContext.AddSubfolderCommand}"
+                                      CommandParameter="{Binding}" Header="Add Subfolder" />
+                            <MenuItem Command="{Binding #ItemsTreeView.DataContext.AddApiCommand}"
+                                      CommandParameter="{Binding}" Header="Add API" />
+                            <Separator />
+                            <MenuItem Command="{Binding #ItemsTreeView.DataContext.SaveChangesCommand}"
+                                      CommandParameter="{Binding}" Header="Save Changes" />
+                            <MenuItem Command="{Binding #ItemsTreeView.DataContext.DeleteItemCommand}"
+                                      CommandParameter="{Binding}" Header="Delete Folder" />
+                        </ContextMenu>
+                    </StackPanel.ContextMenu>
+                    <icons:MaterialIcon Kind="Folder" />
+                    <Grid>
+                        <TextBlock IsVisible="{Binding !IsRenaming}" Text="{Binding Name}" />
+                        <TextBox KeyDown="RenameTextBox_OnKeyDown" LostFocus="RenameTextBox_OnLostFocus"
+                                 IsVisible="{Binding IsRenaming}" Text="{Binding Name, Mode=TwoWay}" />
+                    </Grid>
+                </StackPanel>
+            </TreeDataTemplate>
+            <DataTemplate DataType="{x:Type models:Api}">
+                <StackPanel Background="Transparent" Orientation="Horizontal" Spacing="4">
+                    <StackPanel.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding #ItemsTreeView.DataContext.RenameCommand}"
+                                      CommandParameter="{Binding}" Header="Rename" />
+                            <MenuItem Command="{Binding #ItemsTreeView.DataContext.SaveChangesCommand}"
+                                      CommandParameter="{Binding}" Header="Save Changes" />
+                            <MenuItem Command="{Binding #ItemsTreeView.DataContext.DeleteItemCommand}"
+                                      CommandParameter="{Binding}" Header="Delete API" />
+                        </ContextMenu>
+                    </StackPanel.ContextMenu>
+                    <icons:MaterialIcon Kind="Api" />
+                    <Grid>
+                        <TextBlock IsVisible="{Binding !IsRenaming}" Text="{Binding Name}" />
+                        <TextBox KeyDown="RenameTextBox_OnKeyDown" LostFocus="RenameTextBox_OnLostFocus"
+                                 IsVisible="{Binding IsRenaming}" Text="{Binding Name, Mode=TwoWay}" />
+                    </Grid>
+                </StackPanel>
+            </DataTemplate>
+        </TreeView.DataTemplates>
+    </TreeView>
+</UserControl>

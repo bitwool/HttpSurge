@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HttpSurge.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="HttpSurge.UI.Views.ApiDetailView"
+             x:DataType="vm:ApiDetailViewModel">
+    <StackPanel Spacing="10" Margin="10">
+        <TextBlock FontSize="18" Text="API Details" />
+        <TextBox Text="{Binding Api.Name, Mode=TwoWay}" Watermark="Name" />
+        <TextBox Text="{Binding Api.Method, Mode=TwoWay}" Watermark="Method" />
+        <TextBox Text="{Binding Api.Url, Mode=TwoWay}" Watermark="URL" />
+        <Button Command="{Binding SendRequestCommand}" Content="Send" />
+        <TextBlock Text="{Binding StatusCode, StringFormat='Status: {0}'}" />
+        <TextBox Text="{Binding ResponseContent}" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True"
+                 Height="200" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HttpSurge.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="HttpSurge.UI.Views.ApiTabView"
+             x:DataType="vm:ApiTabViewModel">
+    <TabControl x:Name="ApiTabControl" Margin="10"
+                ItemsSource="{Binding OpenApiTabs}"
+                SelectedItem="{Binding SelectedApiTab, Mode=TwoWay}">
+        <TabControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:ApiDetailViewModel">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock Text="{Binding Api.Name}" />
+                    <Button Command="{Binding $parent[TabControl].DataContext.CloseTabCommand}"
+                            CommandParameter="{Binding}"
+                            Content="X"
+                            FontSize="10"
+                            Padding="4,0"
+                            VerticalContentAlignment="Center" />
+                </StackPanel>
+            </DataTemplate>
+        </TabControl.ItemTemplate>
+    </TabControl>
+</UserControl>
