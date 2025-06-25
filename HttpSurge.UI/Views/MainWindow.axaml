@@ -49,10 +49,10 @@
             </StackPanel>
         </Border>
 
-        <ContentControl Grid.Column="1" Content="{Binding Column2Content}" />
+        <ContentControl Grid.Column="1" Content="{Binding LeftPanelContent}" />
         <GridSplitter Grid.Column="1" Width="2" Background="LightGray" HorizontalAlignment="Right" />
         
-        <ContentControl Grid.Column="2" Content="{Binding Column3Content}" />
+        <ContentControl Grid.Column="2" Content="{Binding RightPanelContent}" />
     </Grid>
 
 </Window>

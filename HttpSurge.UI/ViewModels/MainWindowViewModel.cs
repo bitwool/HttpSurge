@@ -11,11 +11,9 @@ namespace HttpSurge.UI.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    [ObservableProperty]
-    private ViewModelBase? _column2Content;
+    [ObservableProperty] private ViewModelBase? _leftPanelContent;
 
-    [ObservableProperty]
-    private ViewModelBase? _column3Content;
+    [ObservableProperty] private ViewModelBase? _rightPanelContent;
 
     public RequestTreeViewModel RequestTreeVm { get; }
     public ApiTabViewModel ApiTabVm { get; }
@@ -35,8 +33,11 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     // 主要构造函数，同时接收所有依赖
-    public MainWindowViewModel(RequestTreeViewModel requestTreeVm, ApiTabViewModel apiTabVm,
-        VariableManagementViewModel variableManagementVm, PerformanceTestViewModel performanceTestVm,
+    public MainWindowViewModel(
+        RequestTreeViewModel requestTreeVm,
+        ApiTabViewModel apiTabVm,
+        VariableManagementViewModel variableManagementVm,
+        PerformanceTestViewModel performanceTestVm,
         PerformanceTestDetailViewModel performanceTestDetailVm)
     {
         RequestTreeVm = requestTreeVm;
@@ -49,7 +50,6 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void Initialize()
     {
-        // 设置树形视图和标签页视图之间的通信
         RequestTreeVm.PropertyChanged += (sender, args) =>
         {
             if (args.PropertyName == nameof(RequestTreeViewModel.SelectedItem) && RequestTreeVm.SelectedItem is Api api)
@@ -58,28 +58,26 @@ public partial class MainWindowViewModel : ViewModelBase
             }
         };
 
-        // Default view
         ShowApiManagement();
     }
 
     [RelayCommand]
     private void ShowApiManagement()
     {
-        Column2Content = RequestTreeVm;
-        Column3Content = ApiTabVm;
+        LeftPanelContent = RequestTreeVm;
+        RightPanelContent = ApiTabVm;
     }
 
     [RelayCommand]
     private void ShowVariableManagement()
     {
-        Column2Content = VariableManagementVm;
-        Column3Content = ApiTabVm; // Or another view model if needed
+        LeftPanelContent = VariableManagementVm;
     }
 
     [RelayCommand]
     private void ShowPerformanceTest()
     {
-        Column2Content = PerformanceTestVm;
-        Column3Content = PerformanceTestDetailVm;
+        LeftPanelContent = PerformanceTestVm;
+        RightPanelContent = PerformanceTestDetailVm;
     }
 }
