@@ -13,7 +13,7 @@
             <DataTemplate x:DataType="vm:ApiDetailViewModel">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <TextBlock Text="{Binding Api.Name}" />
-                    <Button Command="{Binding $parent[TabControl].DataContext.CloseTabCommand}"
+                    <Button Command="{Binding $parent[TabControl].((vm:ApiTabViewModel)DataContext).CloseTabCommand}"
                             CommandParameter="{Binding}"
                             Content="X"
                             FontSize="10"

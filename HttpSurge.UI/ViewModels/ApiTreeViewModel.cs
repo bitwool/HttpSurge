@@ -1,6 +1,7 @@
 using Avalonia;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -8,10 +9,11 @@ using CommunityToolkit.Mvvm.Input;
 using HttpSurge.UI.Data;
 using HttpSurge.UI.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Specialized;
 
 namespace HttpSurge.UI.ViewModels;
 
-public partial class RequestTreeViewModel : ViewModelBase
+public partial class ApiTreeViewModel : ViewModelBase
 {
     private readonly AppDbContext? _dbContext;
 
@@ -21,7 +23,7 @@ public partial class RequestTreeViewModel : ViewModelBase
     [ObservableProperty]
     private TreeItem? _selectedItem;
 
-    public RequestTreeViewModel()
+    public ApiTreeViewModel()
     {
         if (Design.IsDesignMode)
         {
@@ -48,12 +50,26 @@ public partial class RequestTreeViewModel : ViewModelBase
         }
     }
 
-    public RequestTreeViewModel(AppDbContext dbContext)
+    public ApiTreeViewModel(AppDbContext dbContext)
     {
         _dbContext = dbContext;
         _dbContext.Database.EnsureCreated();
 
-        var allItems = _dbContext.TreeItems.ToList();
+        // Eager load navigation properties for Api entities
+        _dbContext.Apis
+            .Include(a => a.Headers)
+            .Include(a => a.QueryParams)
+            .Load();
+
+        var allItems = _dbContext.TreeItems.Local.ToList();
+        foreach (var item in allItems)
+        {
+            if (item is Api api)
+            {
+                SubscribeToApiChanges(api);
+            }
+        }
+
         var rootItems = allItems.Where(i => i.ParentId == null).ToList();
 
         foreach (var item in rootItems)
@@ -69,11 +85,13 @@ public partial class RequestTreeViewModel : ViewModelBase
             var collection1 = new Collection { Name = "Collection 1" };
             var folder1 = new Folder { Name = "Subfolder 1" };
             var api1 = new Api { Name = "Get Users", Method = "GET", Url = "https://reqres.in/api/users" };
+            SubscribeToApiChanges(api1);
             folder1.Children.Add(api1);
             collection1.Children.Add(folder1);
 
             var collection2 = new Collection { Name = "Collection 2" };
             var api2 = new Api { Name = "Get Single User", Method = "GET", Url = "https://reqres.in/api/users/2" };
+            SubscribeToApiChanges(api2);
             collection2.Children.Add(api2);
 
             _dbContext.TreeItems.Add(collection1);
@@ -87,6 +105,52 @@ public partial class RequestTreeViewModel : ViewModelBase
                 LoadChildren(item, allItems);
             }
             Items = new ObservableCollection<TreeItem>(rootItems);
+        }
+    }
+
+    private void SubscribeToApiChanges(Api api)
+    {
+        // Save when a property on the Api object itself changes (e.g., Name, Url)
+        api.PropertyChanged += (s, e) => SaveChanges(api);
+
+        if (api.Headers is INotifyCollectionChanged headers)
+        {
+            headers.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (INotifyPropertyChanged item in e.NewItems)
+                    {
+                        item.PropertyChanged += (s, e) => SaveChanges(api);
+                    }
+                }
+                SaveChanges(api);
+            };
+        }
+
+        if (api.QueryParams is INotifyCollectionChanged queryParams)
+        {
+            queryParams.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (INotifyPropertyChanged item in e.NewItems)
+                    {
+                        item.PropertyChanged += (s, e) => SaveChanges(api);
+                    }
+                }
+                SaveChanges(api);
+            };
+        }
+
+        foreach (var header in api.Headers)
+        {
+            (header as INotifyPropertyChanged).PropertyChanged += (s, e) => SaveChanges(api);
+        }
+
+        foreach (var queryParam in api.QueryParams)
+        {
+            (queryParam as INotifyPropertyChanged).PropertyChanged += (s, e) => SaveChanges(api);
         }
     }
 
@@ -136,6 +200,7 @@ public partial class RequestTreeViewModel : ViewModelBase
         if (_dbContext is null) return;
 
         var newApi = new Api { Name = "New Api", ParentId = parent.Id };
+        SubscribeToApiChanges(newApi);
         _dbContext.Apis.Add(newApi);
         _dbContext.SaveChanges();
         parent.Children.Add(newApi);

@@ -15,7 +15,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty] private ViewModelBase? _rightPanelContent;
 
-    public RequestTreeViewModel RequestTreeVm { get; }
+    public ApiTreeViewModel ApiTreeVm { get; }
     public ApiTabViewModel ApiTabVm { get; }
     public VariableManagementViewModel VariableManagementVm { get; }
     public PerformanceTestViewModel PerformanceTestVm { get; }
@@ -24,7 +24,7 @@ public partial class MainWindowViewModel : ViewModelBase
     // This constructor is used by the XAML designer
     public MainWindowViewModel()
     {
-        RequestTreeVm = new RequestTreeViewModel();
+        ApiTreeVm = new ApiTreeViewModel();
         ApiTabVm = new ApiTabViewModel();
         VariableManagementVm = new VariableManagementViewModel();
         PerformanceTestVm = new PerformanceTestViewModel();
@@ -34,13 +34,13 @@ public partial class MainWindowViewModel : ViewModelBase
 
     // 主要构造函数，同时接收所有依赖
     public MainWindowViewModel(
-        RequestTreeViewModel requestTreeVm,
+        ApiTreeViewModel apiTreeVm,
         ApiTabViewModel apiTabVm,
         VariableManagementViewModel variableManagementVm,
         PerformanceTestViewModel performanceTestVm,
         PerformanceTestDetailViewModel performanceTestDetailVm)
     {
-        RequestTreeVm = requestTreeVm;
+        ApiTreeVm = apiTreeVm;
         ApiTabVm = apiTabVm;
         VariableManagementVm = variableManagementVm;
         PerformanceTestVm = performanceTestVm;
@@ -50,9 +50,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void Initialize()
     {
-        RequestTreeVm.PropertyChanged += (sender, args) =>
+        ApiTreeVm.PropertyChanged += (sender, args) =>
         {
-            if (args.PropertyName == nameof(RequestTreeViewModel.SelectedItem) && RequestTreeVm.SelectedItem is Api api)
+            if (args.PropertyName == nameof(ApiTreeViewModel.SelectedItem) && ApiTreeVm.SelectedItem is Api api)
             {
                 ApiTabVm.OpenApi(api);
             }
@@ -64,7 +64,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void ShowApiManagement()
     {
-        LeftPanelContent = RequestTreeVm;
+        LeftPanelContent = ApiTreeVm;
         RightPanelContent = ApiTabVm;
     }
 

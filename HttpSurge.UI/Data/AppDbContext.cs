@@ -9,6 +9,8 @@ public class AppDbContext : DbContext
     public DbSet<Collection> Collections { get; set; }
     public DbSet<Folder> Folders { get; set; }
     public DbSet<Api> Apis { get; set; }
+    public DbSet<Header> Headers { get; set; }
+    public DbSet<QueryParam> QueryParams { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -27,5 +29,17 @@ public class AppDbContext : DbContext
             .HasOne(p => p.Parent)
             .WithMany(p => p.Children)
             .HasForeignKey(p => p.ParentId);
+
+        modelBuilder.Entity<Api>()
+            .HasMany(a => a.Headers)
+            .WithOne(h => h.Api)
+            .HasForeignKey(h => h.ApiId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Api>()
+            .HasMany(a => a.QueryParams)
+            .WithOne(q => q.Api)
+            .HasForeignKey(q => q.ApiId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

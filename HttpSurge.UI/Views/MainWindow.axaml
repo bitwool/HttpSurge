@@ -11,8 +11,8 @@
         Title="HttpSurge.UI">
 
     <Window.DataTemplates>
-        <DataTemplate DataType="{x:Type vm:RequestTreeViewModel}">
-            <views:RequestTreeView />
+        <DataTemplate DataType="{x:Type vm:ApiTreeViewModel}">
+            <views:ApiTreeView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:ApiTabViewModel}">
             <views:ApiTabView />

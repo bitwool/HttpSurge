@@ -3,14 +3,63 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:HttpSurge.UI.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:models="using:HttpSurge.UI.Models"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
              x:Class="HttpSurge.UI.Views.ApiDetailView"
              x:DataType="vm:ApiDetailViewModel">
     <StackPanel Spacing="10" Margin="10">
         <TextBlock FontSize="18" Text="API Details" />
         <TextBox Text="{Binding Api.Name, Mode=TwoWay}" Watermark="Name" />
-        <TextBox Text="{Binding Api.Method, Mode=TwoWay}" Watermark="Method" />
-        <TextBox Text="{Binding Api.Url, Mode=TwoWay}" Watermark="URL" />
+        <DockPanel>
+            <ComboBox ItemsSource="{x:Static vm:ApiDetailViewModel.HttpMethods}"
+                      SelectedItem="{Binding Api.Method, Mode=TwoWay}"
+                      Width="100" />
+            <TextBox Text="{Binding Api.Url, Mode=TwoWay}" Watermark="URL" />
+        </DockPanel>
+
+        <TabControl>
+            <TabItem Header="Query Params">
+                <StackPanel>
+                    <Button Command="{Binding AddQueryParamCommand}" Content="Add Query Param" />
+                    <ItemsControl ItemsSource="{Binding Api.QueryParams}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="models:QueryParam">
+                                <DockPanel>
+                                    <Button Command="{Binding $parent[ItemsControl].((vm:ApiDetailViewModel)DataContext).RemoveQueryParamCommand}"
+                                            CommandParameter="{Binding .}"
+                                            Content="Remove" />
+                                    <TextBox Text="{Binding Key, Mode=TwoWay}" Watermark="Key" />
+                                    <TextBox Text="{Binding Value, Mode=TwoWay}" Watermark="Value" />
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Headers">
+                <StackPanel>
+                    <Button Command="{Binding AddHeaderCommand}" Content="Add Header" />
+                    <ItemsControl ItemsSource="{Binding Api.Headers}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="models:Header">
+                                <DockPanel>
+                                    <Button Command="{Binding $parent[ItemsControl].((vm:ApiDetailViewModel)DataContext).RemoveHeaderCommand}"
+                                            CommandParameter="{Binding .}"
+                                            Content="Remove" />
+                                    <TextBox Text="{Binding Key, Mode=TwoWay}" Watermark="Key" />
+                                    <TextBox Text="{Binding Value, Mode=TwoWay}" Watermark="Value" />
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Body">
+                <TextBox Text="{Binding Api.Body, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True"
+                         Height="150" />
+            </TabItem>
+        </TabControl>
+
         <Button Command="{Binding SendRequestCommand}" Content="Send" />
         <TextBlock Text="{Binding StatusCode, StringFormat='Status: {0}'}" />
         <TextBox Text="{Binding ResponseContent}" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True"

@@ -18,7 +18,7 @@ public static class ServiceProviderFactory
 
         // ViewModels
         services.AddTransient<MainWindowViewModel>();
-        services.AddTransient<RequestTreeViewModel>();
+        services.AddTransient<ApiTreeViewModel>();
         services.AddSingleton<ApiTabViewModel>();
         services.AddTransient<VariableManagementViewModel>();
         services.AddTransient<PerformanceTestViewModel>();

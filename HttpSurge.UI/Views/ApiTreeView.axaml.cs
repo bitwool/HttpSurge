@@ -6,16 +6,16 @@ using HttpSurge.UI.ViewModels;
 
 namespace HttpSurge.UI.Views;
 
-public partial class RequestTreeView : UserControl
+public partial class ApiTreeView : UserControl
 {
-    public RequestTreeView()
+    public ApiTreeView()
     {
         InitializeComponent();
     }
 
     private void RenameTextBox_OnLostFocus(object? sender, RoutedEventArgs e)
     {
-        if (sender is TextBox { DataContext: TreeItem item } && DataContext is RequestTreeViewModel vm)
+        if (sender is TextBox { DataContext: TreeItem item } && DataContext is ApiTreeViewModel vm)
         {
             if (!item.IsRenaming) return;
             item.IsRenaming = false;
@@ -26,7 +26,7 @@ public partial class RequestTreeView : UserControl
     private void RenameTextBox_OnKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key != Key.Enter) return;
-        if (sender is not TextBox { DataContext: TreeItem item } || DataContext is not RequestTreeViewModel vm) return;
+        if (sender is not TextBox { DataContext: TreeItem item } || DataContext is not ApiTreeViewModel vm) return;
 
         if (!item.IsRenaming) return;
         item.IsRenaming = false;
