@@ -8,7 +8,8 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="HttpSurge.UI.Views.ApiTreeView"
              x:DataType="vm:ApiTreeViewModel">
-    <TreeView x:Name="ItemsTreeView" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+    <TreeView x:Name="ItemsTreeView" ItemsSource="{Binding ObservableItems}"
+              SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
         <TreeView.ContextMenu>
             <ContextMenu>
                 <MenuItem Command="{Binding AddCollectionCommand}" Header="Add Collection" />
@@ -41,7 +42,8 @@
                     <Grid>
                         <TextBlock IsVisible="{Binding !IsRenaming}" Text="{Binding Name}" />
                         <TextBox KeyDown="RenameTextBox_OnKeyDown" LostFocus="RenameTextBox_OnLostFocus"
-                                 IsVisible="{Binding IsRenaming}" Text="{Binding Name, Mode=TwoWay}" />
+                                 IsVisible="{Binding IsRenaming}" Text="{Binding Name, Mode=TwoWay}"
+                                 PropertyChanged="RenameTextBox_OnPropertyChanged" />
                     </Grid>
                 </StackPanel>
             </TreeDataTemplate>
@@ -49,24 +51,30 @@
                 <StackPanel Background="Transparent" Orientation="Horizontal" Spacing="4">
                     <StackPanel.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding #ItemsTreeView.((vm:ApiTreeViewModel)DataContext).RenameCommand}"
-                                      CommandParameter="{Binding}" Header="Rename" />
-                            <MenuItem Command="{Binding #ItemsTreeView.((vm:ApiTreeViewModel)DataContext).AddSubfolderCommand}"
-                                      CommandParameter="{Binding}" Header="Add Subfolder" />
-                            <MenuItem Command="{Binding #ItemsTreeView.((vm:ApiTreeViewModel)DataContext).AddApiCommand}"
-                                      CommandParameter="{Binding}" Header="Add API" />
+                            <MenuItem
+                                Command="{Binding #ItemsTreeView.((vm:ApiTreeViewModel)DataContext).RenameCommand}"
+                                CommandParameter="{Binding}" Header="Rename" />
+                            <MenuItem
+                                Command="{Binding #ItemsTreeView.((vm:ApiTreeViewModel)DataContext).AddSubfolderCommand}"
+                                CommandParameter="{Binding}" Header="Add Subfolder" />
+                            <MenuItem
+                                Command="{Binding #ItemsTreeView.((vm:ApiTreeViewModel)DataContext).AddApiCommand}"
+                                CommandParameter="{Binding}" Header="Add API" />
                             <Separator />
-                            <MenuItem Command="{Binding #ItemsTreeView.((vm:ApiTreeViewModel)DataContext).SaveChangesCommand}"
-                                      CommandParameter="{Binding}" Header="Save Changes" />
-                            <MenuItem Command="{Binding #ItemsTreeView.((vm:ApiTreeViewModel)DataContext).DeleteItemCommand}"
-                                      CommandParameter="{Binding}" Header="Delete Folder" />
+                            <MenuItem
+                                Command="{Binding #ItemsTreeView.((vm:ApiTreeViewModel)DataContext).SaveChangesCommand}"
+                                CommandParameter="{Binding}" Header="Save Changes" />
+                            <MenuItem
+                                Command="{Binding #ItemsTreeView.((vm:ApiTreeViewModel)DataContext).DeleteItemCommand}"
+                                CommandParameter="{Binding}" Header="Delete Folder" />
                         </ContextMenu>
                     </StackPanel.ContextMenu>
                     <icons:MaterialIcon Kind="Folder" />
                     <Grid>
                         <TextBlock IsVisible="{Binding !IsRenaming}" Text="{Binding Name}" />
                         <TextBox KeyDown="RenameTextBox_OnKeyDown" LostFocus="RenameTextBox_OnLostFocus"
-                                 IsVisible="{Binding IsRenaming}" Text="{Binding Name, Mode=TwoWay}" />
+                                 IsVisible="{Binding IsRenaming}" Text="{Binding Name, Mode=TwoWay}"
+                                 PropertyChanged="RenameTextBox_OnPropertyChanged" />
                     </Grid>
                 </StackPanel>
             </TreeDataTemplate>
@@ -74,12 +82,15 @@
                 <StackPanel Background="Transparent" Orientation="Horizontal" Spacing="4">
                     <StackPanel.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding #ItemsTreeView.((vm:ApiTreeViewModel)DataContext).RenameCommand}"
-                                      CommandParameter="{Binding}" Header="Rename" />
-                            <MenuItem Command="{Binding #ItemsTreeView.((vm:ApiTreeViewModel)DataContext).SaveChangesCommand}"
-                                      CommandParameter="{Binding}" Header="Save Changes" />
-                            <MenuItem Command="{Binding #ItemsTreeView.((vm:ApiTreeViewModel)DataContext).DeleteItemCommand}"
-                                      CommandParameter="{Binding}" Header="Delete API" />
+                            <MenuItem
+                                Command="{Binding #ItemsTreeView.((vm:ApiTreeViewModel)DataContext).RenameCommand}"
+                                CommandParameter="{Binding}" Header="Rename" />
+                            <MenuItem
+                                Command="{Binding #ItemsTreeView.((vm:ApiTreeViewModel)DataContext).SaveChangesCommand}"
+                                CommandParameter="{Binding}" Header="Save Changes" />
+                            <MenuItem
+                                Command="{Binding #ItemsTreeView.((vm:ApiTreeViewModel)DataContext).DeleteItemCommand}"
+                                CommandParameter="{Binding}" Header="Delete API" />
                         </ContextMenu>
                     </StackPanel.ContextMenu>
                     <icons:MaterialIcon Kind="Api" />
@@ -87,7 +98,8 @@
                         <TextBlock IsVisible="{Binding !IsRenaming}" Text="{Binding Name}" />
 
                         <TextBox KeyDown="RenameTextBox_OnKeyDown" LostFocus="RenameTextBox_OnLostFocus"
-                                 IsVisible="{Binding IsRenaming}" Text="{Binding Name, Mode=TwoWay}" />
+                                 IsVisible="{Binding IsRenaming}" Text="{Binding Name, Mode=TwoWay}"
+                                 PropertyChanged="RenameTextBox_OnPropertyChanged" />
                     </Grid>
                 </StackPanel>
             </DataTemplate>

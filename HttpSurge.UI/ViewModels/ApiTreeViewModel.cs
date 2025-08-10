@@ -18,7 +18,7 @@ public partial class ApiTreeViewModel : ViewModelBase
     private readonly AppDbContext? _dbContext;
 
     [ObservableProperty]
-    private ObservableCollection<TreeItem> _items = new();
+    private ObservableCollection<TreeItem> _observableItems = new();
 
     [ObservableProperty]
     private TreeItem? _selectedItem;
@@ -27,7 +27,7 @@ public partial class ApiTreeViewModel : ViewModelBase
     {
         if (Design.IsDesignMode)
         {
-            _items = new ObservableCollection<TreeItem>
+            _observableItems = new ObservableCollection<TreeItem>
             {
                 new Collection
                 {
@@ -55,11 +55,12 @@ public partial class ApiTreeViewModel : ViewModelBase
         _dbContext = dbContext;
         _dbContext.Database.EnsureCreated();
 
-        // Eager load navigation properties for Api entities
+        _dbContext.TreeItems.Load();
         _dbContext.Apis
             .Include(a => a.Headers)
             .Include(a => a.QueryParams)
             .Load();
+
 
         var allItems = _dbContext.TreeItems.Local.ToList();
         foreach (var item in allItems)
@@ -70,16 +71,16 @@ public partial class ApiTreeViewModel : ViewModelBase
             }
         }
 
-        var rootItems = allItems.Where(i => i.ParentId == null).ToList();
+        var collectionItems = allItems.Where(i => i.ParentId == null).ToList();
 
-        foreach (var item in rootItems)
+        foreach (var item in collectionItems)
         {
             LoadChildren(item, allItems);
         }
 
-        Items = new ObservableCollection<TreeItem>(rootItems);
+        ObservableItems = new ObservableCollection<TreeItem>(collectionItems);
 
-        if (!Items.Any())
+        if (!ObservableItems.Any())
         {
             // Add sample data if database is empty
             var collection1 = new Collection { Name = "Collection 1" };
@@ -99,18 +100,17 @@ public partial class ApiTreeViewModel : ViewModelBase
             _dbContext.SaveChanges();
 
             allItems = _dbContext.TreeItems.ToList();
-            rootItems = allItems.Where(i => i.ParentId == null).ToList();
-            foreach (var item in rootItems)
+            collectionItems = allItems.Where(i => i.ParentId == null).ToList();
+            foreach (var item in collectionItems)
             {
                 LoadChildren(item, allItems);
             }
-            Items = new ObservableCollection<TreeItem>(rootItems);
+            ObservableItems = new ObservableCollection<TreeItem>(collectionItems);
         }
     }
 
     private void SubscribeToApiChanges(Api api)
     {
-        // Save when a property on the Api object itself changes (e.g., Name, Url)
         api.PropertyChanged += (s, e) => SaveChanges(api);
 
         if (api.Headers is INotifyCollectionChanged headers)
@@ -178,7 +178,7 @@ public partial class ApiTreeViewModel : ViewModelBase
         var newCollection = new Collection { Name = "New Collection" };
         _dbContext.Collections.Add(newCollection);
         _dbContext.SaveChanges();
-        Items.Add(newCollection);
+        ObservableItems.Add(newCollection);
     }
 
     [RelayCommand]
@@ -190,7 +190,7 @@ public partial class ApiTreeViewModel : ViewModelBase
         var newFolder = new Folder { Name = "New Folder", ParentId = parent.Id };
         _dbContext.Folders.Add(newFolder);
         _dbContext.SaveChanges();
-        parent.Children.Add(newFolder);
+        // parent.Children.Add(newFolder);
     }
 
     [RelayCommand]
@@ -203,7 +203,7 @@ public partial class ApiTreeViewModel : ViewModelBase
         SubscribeToApiChanges(newApi);
         _dbContext.Apis.Add(newApi);
         _dbContext.SaveChanges();
-        parent.Children.Add(newApi);
+        // parent.Children.Add(newApi);
     }
 
     [RelayCommand]
@@ -219,7 +219,7 @@ public partial class ApiTreeViewModel : ViewModelBase
         }
         else
         {
-            Items.Remove(item);
+            ObservableItems.Remove(item);
         }
 
         DeleteItemAndChildren(item);

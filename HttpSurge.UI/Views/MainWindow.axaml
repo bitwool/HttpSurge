@@ -37,14 +37,13 @@
     <Grid ColumnDefinitions="Auto, 300, *">
         <Border Grid.Column="0" Background="#F0F0F0" Padding="5">
             <StackPanel Spacing="10">
-                <Button Command="{Binding ShowApiManagementCommand}" ToolTip.Tip="接口管理">
-                    <TextBlock>API</TextBlock>
+                <Button Background="#F0F0F0"  Command="{Binding ShowApiManagementCommand}" Content="{LucideIconContent FolderTree}" ToolTip.Tip="接口管理">
                 </Button>
-                <Button Command="{Binding ShowVariableManagementCommand}" ToolTip.Tip="变量管理">
-                    <TextBlock>VAR</TextBlock>
+                <Button Background="#F0F0F0"  Command="{Binding ShowVariableManagementCommand}" Content="{LucideIconContent Braces}" ToolTip.Tip="变量管理">
                 </Button>
-                <Button Command="{Binding ShowPerformanceTestCommand}" ToolTip.Tip="性能测试">
-                    <TextBlock>PERF</TextBlock>
+                <Button  Background="#F0F0F0"  Command="{Binding ShowPerformanceTestCommand}" Content="{LucideIconContent Rocket}" ToolTip.Tip="性能测试">
+                </Button>
+                <Button Background="#F0F0F0"  Command="{Binding ShowHistoryRecordsCommand}" Content="{LucideIconContent History}" ToolTip.Tip="性能测试">
                 </Button>
             </StackPanel>
         </Border>

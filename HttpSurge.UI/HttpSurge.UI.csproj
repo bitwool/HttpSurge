@@ -20,11 +20,12 @@
         <!--Condition
         below is needed to remove Avalonia.Diagnostics package from build output in Release
         configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics"
-            Version="11.3.1" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.1" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+        <PackageReference Include="Lucide.Avalonia" Version="0.1.37" />
         <PackageReference Include="Material.Icons.Avalonia" Version="2.1.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.6" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="Semi.Avalonia" Version="11.2.1.9" />
     </ItemGroup>
 </Project>

@@ -20,6 +20,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public VariableManagementViewModel VariableManagementVm { get; }
     public PerformanceTestViewModel PerformanceTestVm { get; }
     public PerformanceTestDetailViewModel PerformanceTestDetailVm { get; }
+    public HistoryRecordsViewModel HistoryRecordsVm { get; }
 
     // This constructor is used by the XAML designer
     public MainWindowViewModel()
@@ -38,13 +39,15 @@ public partial class MainWindowViewModel : ViewModelBase
         ApiTabViewModel apiTabVm,
         VariableManagementViewModel variableManagementVm,
         PerformanceTestViewModel performanceTestVm,
-        PerformanceTestDetailViewModel performanceTestDetailVm)
+        PerformanceTestDetailViewModel performanceTestDetailVm,
+        HistoryRecordsViewModel historyRecordsVm)
     {
         ApiTreeVm = apiTreeVm;
         ApiTabVm = apiTabVm;
         VariableManagementVm = variableManagementVm;
         PerformanceTestVm = performanceTestVm;
         PerformanceTestDetailVm = performanceTestDetailVm;
+        HistoryRecordsVm = historyRecordsVm;
         Initialize();
     }
 
@@ -80,4 +83,11 @@ public partial class MainWindowViewModel : ViewModelBase
         LeftPanelContent = PerformanceTestVm;
         RightPanelContent = PerformanceTestDetailVm;
     }
+
+    [RelayCommand]
+    private void ShowHistoryRecords()
+    {
+        LeftPanelContent = HistoryRecordsVm;
+    }
+
 }

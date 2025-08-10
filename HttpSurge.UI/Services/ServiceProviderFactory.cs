@@ -14,7 +14,7 @@ public static class ServiceProviderFactory
 
         // Database
         services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlite("Data Source=httpsurge.db"));
+            options.UseSqlite("Data Source=http-surge.db"));
 
         // ViewModels
         services.AddTransient<MainWindowViewModel>();
@@ -23,6 +23,7 @@ public static class ServiceProviderFactory
         services.AddTransient<VariableManagementViewModel>();
         services.AddTransient<PerformanceTestViewModel>();
         services.AddTransient<PerformanceTestDetailViewModel>();
+        services.AddTransient<HistoryRecordsViewModel>();
 
         return services.BuildServiceProvider();
     }
